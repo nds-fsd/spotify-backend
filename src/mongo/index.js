@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://spotify:spotify@localhost:27017/app?authSource=admin');
+mongoose.connect('mongodb://spotify:spotify@localhost:27022/app?authSource=admin');
 
 
 const mongo = mongoose.connection;
