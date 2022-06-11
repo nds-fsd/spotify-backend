@@ -29,8 +29,11 @@ songsRouter.post('/songs', async(req, res) => {
 });
 
 
+
 songsRouter.patch('/songs/:id', async(req, res) => {
-    const song = await MySongs.findByIdAndUpdate(req.params.id, req.body);
+    const { id } = req.params;
+    const { body } = req;
+    const song = await MySongs.findOneAndUpdate({ _id: id }, body, { new: true });
 
    res.json(song);
 })
