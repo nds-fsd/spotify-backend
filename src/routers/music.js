@@ -10,6 +10,19 @@ songsRouter.get('/songs', async(req, res)=> {
 });
 
 
+songsRouter.get('/songs/:id', async(req, res) => {
+    const { id } = req.params;
+    if(id !== undefined){
+    const song = await MySongs.findById( id );
+    return res.json(song);
+}
+
+    return res.status(404).send();
+})
+
+
+
+
 
 songsRouter.post('/songs', async(req, res) => {
     const body = req.body;
@@ -33,10 +46,26 @@ songsRouter.post('/songs', async(req, res) => {
 songsRouter.patch('/songs/:id', async(req, res) => {
     const { id } = req.params;
     const { body } = req;
+    if(id !== undefined){
     const song = await MySongs.findOneAndUpdate({ _id: id }, body, { new: true });
+    
+    return res.json(song);
+    }
 
-   res.json(song);
+    return res.status(404).send(); 
 })
+
+songsRouter.delete('/songs/:id', async(req, res) => {
+    
+    
+    const song = await MySongs.findByIdAndRemove( req.params.id );
+
+    return res.status(200).send( {message: "Song Deleted"} );
+
+})
+
+//me elimina el primer elemento de mi bbdd
+//preguntar findByIdAndDelete y findOneAndDelete
 
 
 
