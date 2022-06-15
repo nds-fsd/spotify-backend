@@ -1,5 +1,4 @@
-// const date = new Date();
-//   const yearActual = date.getFullYear();
+
 
 const { Schema, model } = require('mongoose');
 
