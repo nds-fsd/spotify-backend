@@ -8,6 +8,7 @@ const songsSchema = new Schema({
     duration: {type: Number, required: true},
     genre: {type: String, required: true},
     releaseDate: {type: Date, required: true},
+    photo:{type: String, required: true},
 });
 
 const MySongs = model('songs', songsSchema);

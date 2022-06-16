@@ -18,7 +18,8 @@ songsRouter.post('/songs', async(req, res) => {
         title: body.title,
         duration: body.duration,
         genre: body.genre,
-        releaseDate: body.releaseDate
+        releaseDate: body.releaseDate,
+        photo: body.photo
     }
 
     const newSong = MySongs(data);
