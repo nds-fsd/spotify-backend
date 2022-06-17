@@ -1,17 +1,20 @@
 const express = require("express");
-const MySongs = require("../mongo/Schema/songs");
+const Song = require("../mongo/Schema/songs");
 const songsRouter = express.Router();
 // const { songsList } = require('./dataSongs/songsList')
 
 songsRouter.get("/songs", async (req, res) => {
-  const allSongs = await MySongs.find();
+  const allSongs = await Song.find();
   res.json(allSongs);
 });
 
 songsRouter.get("/songs/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const song = await MySongs.findById(id);
+    const song = await Song.findById(id);
+    if(!song){
+      return res.status(404).send();
+    }
     return res.json(song);
   }
 
@@ -29,7 +32,7 @@ songsRouter.post("/songs", async (req, res) => {
     photo: body.photo,
   };
 
-  const newSong = MySongs(data);
+  const newSong = new Song(data);
 
   await newSong.save();
 
@@ -40,9 +43,12 @@ songsRouter.patch("/songs/:id", async (req, res) => {
   const { id } = req.params;
   const { body } = req;
   if (id !== undefined) {
-    const song = await MySongs.findOneAndUpdate({ _id: id }, body, {
+    const song = await Song.findOneAndUpdate({ _id: id }, body, {
       new: true,
     });
+    if(!song){
+      return res.status(404).send();
+    }
 
     return res.json(song);
   }
@@ -51,9 +57,16 @@ songsRouter.patch("/songs/:id", async (req, res) => {
 });
 
 songsRouter.delete("/songs/:id", async (req, res) => {
-  const song = await MySongs.findByIdAndRemove(req.params.id);
+  const { id } = req.params;
+  if (id !== undefined) {
+    const song = await Song.findByIdAndRemove(req.params.id, {returnOriginal: true});
+    if(!song){
+      return res.status(404).send();
+    }
+    return res.status(200).send({ message: "Song Deleted" });
 
-  return res.status(200).send({ message: "Song Deleted" });
+  }
+  return res.status(404).send();
 });
 
 //me elimina el primer elemento de mi bbdd
