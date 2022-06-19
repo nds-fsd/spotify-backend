@@ -1,18 +1,17 @@
 const express = require("express");
-const Song = require("../mongo/Schema/songs");
-const songsRouter = express.Router();
-// const { songsList } = require('./dataSongs/songsList')
+const Song = require("../../mongo/Schema/Song/song");
+const songRouter = express.Router();
 
-songsRouter.get("/songs", async (req, res) => {
+songRouter.get("/song", async (req, res) => {
   const allSongs = await Song.find();
   res.json(allSongs);
 });
 
-songsRouter.get("/songs/:id", async (req, res) => {
+songRouter.get("/song/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
     const song = await Song.findById(id);
-    if(!song){
+    if (!song) {
       return res.status(404).send();
     }
     return res.json(song);
@@ -21,7 +20,7 @@ songsRouter.get("/songs/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-songsRouter.post("/songs", async (req, res) => {
+songRouter.post("/song", async (req, res) => {
   const body = req.body;
 
   const data = {
@@ -39,14 +38,14 @@ songsRouter.post("/songs", async (req, res) => {
   res.json(newSong);
 });
 
-songsRouter.patch("/songs/:id", async (req, res) => {
+songRouter.patch("/song/:id", async (req, res) => {
   const { id } = req.params;
   const { body } = req;
   if (id !== undefined) {
     const song = await Song.findOneAndUpdate({ _id: id }, body, {
       new: true,
     });
-    if(!song){
+    if (!song) {
       return res.status(404).send();
     }
 
@@ -56,20 +55,18 @@ songsRouter.patch("/songs/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-songsRouter.delete("/songs/:id", async (req, res) => {
+songRouter.delete("/song/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const song = await Song.findByIdAndRemove(req.params.id, {returnOriginal: true});
-    if(!song){
+    const song = await Song.findByIdAndRemove(req.params.id, {
+      returnOriginal: true,
+    });
+    if (!song) {
       return res.status(404).send();
     }
     return res.status(200).send({ message: "Song Deleted" });
-
   }
   return res.status(404).send();
 });
 
-//me elimina el primer elemento de mi bbdd
-//preguntar findByIdAndDelete y findOneAndDelete
-
-module.exports = songsRouter;
+module.exports = songRouter;
