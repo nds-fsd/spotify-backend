@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const UserService = require("./UserService");
+const { isAdmin } = require("../middleware/middleware");
 
 router.get("/user", async (req, res) => {
   const user = await UserService.find();
@@ -18,7 +19,7 @@ router.get("/user/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-router.post("/user", async (req, res) => {
+router.post("/user", isAdmin, async (req, res) => {
   const document = req.body;
   const user = await UserService.create(document);
   return res.status(201).json(user);

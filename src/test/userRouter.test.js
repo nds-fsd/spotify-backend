@@ -47,4 +47,13 @@ describe("User Router TEST", () => {
       };
     });
   });
+
+  it("USER can not create new USER", async () => {
+    const res = await fakeRequest.post("/user").set(normalUserHeaders).send({
+      name: "Alvaro",
+      email: "jcano2@nuclio.com",
+      password: "nuclio",
+    });
+    expect(res.status).toBe(403);
+  });
 });
