@@ -1,4 +1,3 @@
-
 const dotenv = require("dotenv").config();
 const { expressjwt: jwt } = require("express-jwt");
 const UserService = require("./UserService");
@@ -6,31 +5,25 @@ const express = require("express");
 const jwtSecret = process.env.JWT_SECRET;
 const bcrypt = require("bcrypt");
 
-const User = require("../mongo/Schema/User/User");
+const { User, generateJWT } = require("../mongo/Schema/User/User");
 const authRouter = express.Router();
 
-
-
-
-
-
- 
 authRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
- 
+
   await UserService.findOne({ email })
     .then(async (user) => {
       if (!user)
         return res
           .status(400)
           .json({ error: { email: "This email is not registred" } });
- 
+
       const correctPasswrod = await user.correctPasswrod(password);
       if (!correctPasswrod)
         return res.status(400).json({ error: { password: "Wrong password" } });
- 
+
       res.status(200).json({
-        token: user.generateJWT(),
+        token: generateJWT(user),
         user: {
           id: user._id,
           name: user.name,
@@ -40,7 +33,7 @@ authRouter.post("/login", async (req, res) => {
     })
     .cath((err) => res.status(500).json({ message: err.message }));
 });
- 
+
 authRouter.post("/register", async (req, res) => {
   await UserService.findOne({ email: req.body.email })
     .then((user) => {
@@ -48,7 +41,7 @@ authRouter.post("/register", async (req, res) => {
         return res
           .status(400)
           .json({ error: { email: "This email is already registred." } });
- 
+
       const salt = bcrypt.genSaltSync(10);
       UserService.create({
         ...req.body,
@@ -56,7 +49,7 @@ authRouter.post("/register", async (req, res) => {
       })
         .then((user) => {
           res.status(200).json({
-            token: user.generateJWT(),
+            token: generateJWT(user),
             user: {
               id: user._id,
               name: user.name,
@@ -70,7 +63,7 @@ authRouter.post("/register", async (req, res) => {
       res.status(500).json({ succes: false, message: err.stack })
     );
 });
- 
+
 const configSecurity = (app) => {
   app.use(
     "/",
@@ -80,13 +73,7 @@ const configSecurity = (app) => {
   );
 };
 
-
 module.exports = {
   authRouter,
   configSecurity,
 };
-
-
-
- 
- 

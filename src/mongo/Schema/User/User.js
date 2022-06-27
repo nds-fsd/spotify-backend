@@ -3,36 +3,36 @@ const { Schema, model } = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-
-
 const UserSchema = new Schema({
   name: { type: String, required: true },
   password: { type: String, required: true },
   email: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  role: {
+    type: String,
+    enum: ["ADMIN", "USER"],
+    default: "USER",
+    required: true,
+  },
 });
 
-
-
-/*UserSchema.pre("save", function (next){
-  if (this.isNew || this.isModified("password")){
+UserSchema.pre("save", function (next) {
+  if (this.isNew || this.isModified("password")) {
     const document = this;
-    
-    bcrypt.hash(document.password, saltRounds,  (err, hashedPassword) => {
-      if(err) {
+
+    bcrypt.hash(document.password, 10, (err, hashedPassword) => {
+      if (err) {
         next(err);
-      }else {
+      } else {
         document.password = hashedPassword;
         next();
-
       }
-      
     });
-  }else{
-    next()
+  } else {
+    next();
   }
-})*/
+});
 
 const User = model("register", UserSchema);
 
@@ -40,15 +40,16 @@ UserSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-UserSchema.methods.generateJWT = function () {
+const generateJWT = function (user) {
   const today = new Date();
   const expirationDate = new Date();
   expirationDate.setDate(today.getDate() + 60);
 
   let payload = {
-    id: this._id,
-    email: this.email,
-    name: this.name,
+    id: user._id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
   };
 
   return jwt.sign(payload, process.env.JWT_SECRET, {
@@ -56,13 +57,4 @@ UserSchema.methods.generateJWT = function () {
   });
 };
 
-
-
-
-
-
-
-
-
-module.exports = User;
-
+module.exports = { User, generateJWT };
