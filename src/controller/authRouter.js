@@ -15,6 +15,7 @@ authRouter.post("/login", async (req, res) => {
     return res
       .status(400)
       .json({ error: { email: "This email is not registred" } });
+      
   }
   console.log(user);
   const correctPassword = await comparePassword(user, password);
