@@ -2,12 +2,12 @@ const express = require("express");
 const Song = require("../../mongo/Schema/Song/song");
 const songRouter = express.Router();
 
-songRouter.get("/song", async (req, res) => {
+songsRouter.get("", async (req, res) => {
   const allSongs = await Song.find();
   res.json(allSongs);
 });
 
-songRouter.get("/song/:id", async (req, res) => {
+songsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
     const song = await Song.findById(id);
@@ -20,7 +20,7 @@ songRouter.get("/song/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-songRouter.post("/song", async (req, res) => {
+songsRouter.post("", async (req, res) => {
   const body = req.body;
 
   const data = {
@@ -38,7 +38,7 @@ songRouter.post("/song", async (req, res) => {
   res.json(newSong);
 });
 
-songRouter.patch("/song/:id", async (req, res) => {
+songsRouter.patch("/:id", async (req, res) => {
   const { id } = req.params;
   const { body } = req;
   if (id !== undefined) {
@@ -55,7 +55,7 @@ songRouter.patch("/song/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-songRouter.delete("/song/:id", async (req, res) => {
+songsRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
     const song = await Song.findByIdAndRemove(req.params.id, {

@@ -1,16 +1,17 @@
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
-// lee variables del fichero .env (si este existe)
-dotenv.config();
+
+const {
+  authRouter,
+  configSecurity,
+} = require("./controller/authRouter");
+
 const app = express();
-const mongo = require("./mongo");
-const songRouter = require("./routers/Song/songRouter");
-const bodyParser = require("body-parser");
+const { connectDB } = require("./mongo");
+const { disconnectDB } = require("./mongo");
+const songsRouter = require("./controller/songRouter");
+const User = require("./controller/userRouter");
 const PORT = process.env.PORT;
-
-app.use(bodyParser.json());
-
 app.use(
   cors({
     origin: "*",
@@ -18,9 +19,24 @@ app.use(
   })
 );
 
+configSecurity(app);
 app.use(express.json());
-app.use(songRouter);
+app.use("/songs", songsRouter);
+app.use("/", User);
+app.use("/", authRouter);
 
-app.listen(PORT, () => {
-  console.log('"Server is up and running in port 3001"');
+if (process.env.NODE_ENV !== "test") {
+  connectDB().then(async (error) => {
+    if (error) {
+      console.log(error);
+    }
+  });
+}
+
+const server = app.listen(PORT, () => {
+  if (process.env.NODE_ENV !== "test") {
+    console.log('"Server is up and running in port 3001"');
+  }
 });
+
+module.exports = { app, server };
