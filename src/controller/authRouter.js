@@ -10,12 +10,15 @@ const authRouter = express.Router();
 authRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await UserService.findOne({ email });
+
   if (!user) {
     return res
       .status(400)
       .json({ error: { email: "This email is not registred" } });
   }
-  const correctPassword = await comparePassword(user,password);
+  console.log(user);
+  const correctPassword = await comparePassword(user, password);
+  console.log(correctPassword);
   if (!correctPassword) {
     return res.status(400).json({ error: { password: "Wrong password" } });
   }
@@ -26,18 +29,20 @@ authRouter.post("/login", async (req, res) => {
 });
 
 authRouter.post("/register", async (req, res) => {
-  const existingUser = await UserService.findOne({email: req.body.email});
-  if(existingUser){
-    return res.status(400).json({error: {email: "This email is already registered." }});
+  const existingUser = await UserService.findOne({ email: req.body.email });
+  if (existingUser) {
+    return res
+      .status(400)
+      .json({ error: { email: "This email is already registered." } });
   }
 
-  try{
+  try {
     const newUser = await UserService.create(req.body);
     return res.status(200).json({
       token: generateJWT(newUser),
-      user: newUser
-    })
-  }catch(e){
+      user: newUser,
+    });
+  } catch (e) {
     return res.status(500).json(e);
   }
 });
