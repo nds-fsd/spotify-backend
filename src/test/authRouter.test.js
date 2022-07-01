@@ -27,7 +27,7 @@ describe("Auth Router TEST", () => {
             });
             expect(res.status).toBe(200);
             expect(res.body.token).toBeDefined();
-            expect(res.body.user.id).toBeDefined();
+            expect(res.body.user._id).toBeDefined();
 
         })
 
@@ -42,7 +42,7 @@ describe("Auth Router TEST", () => {
             });
             expect(res.status).toBe(200);
             expect(res.body.token).toBeDefined();
-            expect(res.body.user.id).toBeDefined();
+            expect(res.body.user._id).toBeDefined();
         })
 
 

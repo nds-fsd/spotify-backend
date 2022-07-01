@@ -17,26 +17,23 @@ const UserSchema = new Schema({
   },
 });
 
-UserSchema.pre("save", function (next) {
+
+UserSchema.pre("save",  function (next) {
   if (this.isNew || this.isModified("password")) {
     const document = this;
-
-    bcrypt.hash(document.password, 10, (err, hashedPassword) => {
-      if (err) {
-        next(err);
-      } else {
-        document.password = hashedPassword;
-        next();
-      }
-    });
+    try {
+      document.password = bcrypt.hashSync(document.password);
+      next();
+    }catch (e){
+     next(e);
+    }
   } else {
     next();
   }
 });
 
-const comparePassword = async (user, password) => {
-  const result = await bcrypt.compareSync(password, user.password);
-  return result;
+const comparePassword = (user, password) => {
+  return bcrypt.compareSync(password, user.password);
 }
 
 const generateJWT = function (user) {

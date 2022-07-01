@@ -3,8 +3,6 @@ const { expressjwt: jwt } = require("express-jwt");
 const UserService = require("./UserService");
 const express = require("express");
 const jwtSecret = process.env.JWT_SECRET;
-const bcrypt = require("bcryptjs");
-const { findOne } = require("./UserService");
 
 const { generateJWT, comparePassword } = require("../mongo/Schema/User/User");
 const authRouter = express.Router();
@@ -12,56 +10,36 @@ const authRouter = express.Router();
 authRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await UserService.findOne({ email });
-  console.log(user);
   if (!user) {
     return res
       .status(400)
       .json({ error: { email: "This email is not registred" } });
   }
-
   const correctPassword = await comparePassword(user,password);
   if (!correctPassword) {
     return res.status(400).json({ error: { password: "Wrong password" } });
   }
   return res.status(200).json({
     token: generateJWT(user),
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-    },
+    user,
   });
 });
 
 authRouter.post("/register", async (req, res) => {
-  await UserService.findOne({ email: req.body.email })
-    .then((user) => {
-      if (user)
-        return res
-          .status(400)
-          .json({ error: { email: "This email is already registred." } });
+  const existingUser = await UserService.findOne({email: req.body.email});
+  if(existingUser){
+    return res.status(400).json({error: {email: "This email is already registered." }});
+  }
 
-      const salt = bcrypt.genSaltSync(10);
-      UserService.create({
-        ...req.body,
-        password: bcrypt.hashSync(req.body.password, salt),
-      })
-        //mirar tema hasheo en clase
-        .then((user) => {
-          return res.status(200).json({
-            token: generateJWT(user),
-            user: {
-              id: user._id,
-              name: user.name,
-              email: user.email,
-            },
-          });
-        })
-        .catch((err) => res.status(500).json({ message: err.message }));
+  try{
+    const newUser = await UserService.create(req.body);
+    return res.status(200).json({
+      token: generateJWT(newUser),
+      user: newUser
     })
-    .catch((err) =>
-      res.status(500).json({ success: false, message: err.stack })
-    );
+  }catch(e){
+    return res.status(500).json(e);
+  }
 });
 
 const configSecurity = (app) => {

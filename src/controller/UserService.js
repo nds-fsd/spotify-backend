@@ -5,7 +5,7 @@ const create = async (document) => {
 };
 
 const read = async (id) => {
-  return await User.findById(id);
+  return User.findById(id);
 };
 
 const update = async (id, document) => {
@@ -15,12 +15,12 @@ const update = async (id, document) => {
   return user;
 };
 
-const findOne = async (email) => {
-  return await User.findOne(email);
+const findOne = async (query) => {
+  return User.findOne(query);
 };
 
 const find = async (query) => {
-  return await User.find(query);
+  return User.find(query);
 };
 
 const remove = async (id) => {
