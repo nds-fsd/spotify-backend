@@ -34,10 +34,9 @@ UserSchema.pre("save", function (next) {
   }
 });
 
-const User = model("register", UserSchema);
-
-UserSchema.methods.comparePassword = async function (password) {
-  return await bcrypt.compare(password, this.password);
+UserSchema.methods.comparePassword = (password) => {
+  console.log(password);
+  return bcrypt.compare(password, this.password);
 };
 
 const generateJWT = function (user) {
@@ -56,5 +55,7 @@ const generateJWT = function (user) {
     expiresIn: parseInt(expirationDate.getTime() / 1000, 10),
   });
 };
+
+const User = model("register", UserSchema);
 
 module.exports = { User, generateJWT };

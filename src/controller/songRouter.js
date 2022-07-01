@@ -12,7 +12,7 @@ songsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
     const song = await Song.findById(id);
-    if(!song){
+    if (!song) {
       return res.status(404).send();
     }
     return res.json(song);
@@ -46,7 +46,7 @@ songsRouter.patch("/:id", async (req, res) => {
     const song = await Song.findOneAndUpdate({ _id: id }, body, {
       new: true,
     });
-    if(!song){
+    if (!song) {
       return res.status(404).send();
     }
 
@@ -59,12 +59,13 @@ songsRouter.patch("/:id", async (req, res) => {
 songsRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const song = await Song.findByIdAndRemove(req.params.id, {returnOriginal: true});
-    if(!song){
+    const song = await Song.findByIdAndRemove(req.params.id, {
+      returnOriginal: true,
+    });
+    if (!song) {
       return res.status(404).send();
     }
     return res.status(200).send({ message: "Song Deleted" });
-
   }
   return res.status(404).send();
 });
