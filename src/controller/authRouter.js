@@ -3,15 +3,14 @@ const { expressjwt: jwt } = require("express-jwt");
 const UserService = require("./UserService");
 const express = require("express");
 const jwtSecret = process.env.JWT_SECRET;
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const { findOne } = require("./UserService");
 
-const { User, generateJWT } = require("../mongo/Schema/User/User");
+const { generateJWT, comparePassword } = require("../mongo/Schema/User/User");
 const authRouter = express.Router();
 
 authRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  console.log("paso por aqui");
   const user = await UserService.findOne({ email });
   console.log(user);
   if (!user) {
@@ -20,7 +19,7 @@ authRouter.post("/login", async (req, res) => {
       .json({ error: { email: "This email is not registred" } });
   }
 
-  const correctPassword = await user.comparePassword(password);
+  const correctPassword = await comparePassword(user, password);
   console.log(correctPassword);
   if (!correctPassword) {
     return res.status(400).json({ error: { password: "Wrong password" } });
@@ -50,7 +49,7 @@ authRouter.post("/register", async (req, res) => {
       })
         //mirar tema hasheo en clase
         .then((user) => {
-          res.status(200).json({
+          return res.status(200).json({
             token: generateJWT(user),
             user: {
               id: user._id,

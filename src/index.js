@@ -4,7 +4,7 @@ const cors = require("cors");
 const {
   authRouter,
   configSecurity,
-} = require("../src/controller/authRegister");
+} = require("./controller/authRouter");
 
 const app = express();
 const { connectDB } = require("./mongo");
