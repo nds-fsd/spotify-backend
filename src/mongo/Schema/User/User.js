@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const UserSchema = new Schema({
@@ -34,10 +34,10 @@ UserSchema.pre("save", function (next) {
   }
 });
 
-UserSchema.methods.comparePassword = (password) => {
-  console.log(password);
-  return bcrypt.compare(password, this.password);
-};
+const comparePassword = async (user, password) => {
+  const result = await bcrypt.compareSync(password, user.password);
+  return result;
+}
 
 const generateJWT = function (user) {
   const today = new Date();
@@ -58,4 +58,4 @@ const generateJWT = function (user) {
 
 const User = model("register", UserSchema);
 
-module.exports = { User, generateJWT };
+module.exports = { User, generateJWT, comparePassword };
