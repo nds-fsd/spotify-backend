@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const songsSchema = new Schema({
+const songSchema = new Schema({
   title: { type: String, required: true },
   duration: { type: Number, required: true },
   genre: { type: String, required: true },
@@ -8,7 +8,6 @@ const songsSchema = new Schema({
   photo: { type: String, required: true },
 });
 
-const Song = model("songs", songsSchema);
+const Song = model("song", songSchema);
 
 module.exports = Song;
-
