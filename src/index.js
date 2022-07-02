@@ -1,15 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 
-const {
-  authRouter,
-  configSecurity,
-} = require("./controller/authRouter");
+const { authRouter, configSecurity } = require("./controller/authRouter");
 
 const app = express();
 const { connectDB } = require("./mongo");
 const { disconnectDB } = require("./mongo");
-const songsRouter = require("./controller/songRouter");
+const songRouter = require("./controller/songRouter");
 const User = require("./controller/userRouter");
 const PORT = process.env.PORT;
 app.use(
@@ -21,7 +18,7 @@ app.use(
 
 configSecurity(app);
 app.use(express.json());
-app.use("/songs", songsRouter);
+app.use("/songs", songRouter);
 app.use("/", User);
 app.use("/", authRouter);
 
