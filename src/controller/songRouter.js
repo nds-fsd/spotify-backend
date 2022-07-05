@@ -1,18 +1,18 @@
 const express = require("express");
-const Song = require("../../mongo/Schema/Song/song");
+const Song = require("../mongo/Schema/Song/song");
 const songRouter = express.Router();
 
-songsRouter.get("", async (req, res) => {
+songRouter.get("", async (req, res) => {
   const allSongs = await Song.find();
   res.json(allSongs);
 });
 
-songsRouter.get("/:id", async (req, res) => {
+songRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
     const song = await Song.findById(id);
     if (!song) {
-      return res.status(404).send();
+      return res.status(400).send();
     }
     return res.json(song);
   }
@@ -20,7 +20,12 @@ songsRouter.get("/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-songsRouter.post("", async (req, res) => {
+songRouter.get("/search", async (req, res) => {
+  const playlist = await Song.find(req.body);
+  res.json(playlist);
+});
+
+songRouter.post("", async (req, res) => {
   const body = req.body;
 
   const data = {
@@ -38,7 +43,7 @@ songsRouter.post("", async (req, res) => {
   res.json(newSong);
 });
 
-songsRouter.patch("/:id", async (req, res) => {
+songRouter.patch("/:id", async (req, res) => {
   const { id } = req.params;
   const { body } = req;
   if (id !== undefined) {
@@ -46,7 +51,7 @@ songsRouter.patch("/:id", async (req, res) => {
       new: true,
     });
     if (!song) {
-      return res.status(404).send();
+      return res.status(400).send();
     }
 
     return res.json(song);
@@ -55,14 +60,12 @@ songsRouter.patch("/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-songsRouter.delete("/:id", async (req, res) => {
+songRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const song = await Song.findByIdAndRemove(req.params.id, {
-      returnOriginal: true,
-    });
+    const song = await Song.findByIdAndRemove(req.params.id);
     if (!song) {
-      return res.status(404).send();
+      return res.status(400).send();
     }
     return res.status(200).send({ message: "Song Deleted" });
   }
