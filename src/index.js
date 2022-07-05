@@ -1,15 +1,13 @@
 const express = require("express");
 const cors = require("cors");
 
-const {
-  authRouter,
-  configSecurity,
-} = require("./controller/authRouter");
+const { authRouter, configSecurity } = require("./controller/authRouter");
 
 const app = express();
 const { connectDB } = require("./mongo");
 const { disconnectDB } = require("./mongo");
 const songsRouter = require("./controller/songRouter");
+const playlistRouter = require("./controller/playlistRouter");
 const User = require("./controller/userRouter");
 const PORT = process.env.PORT;
 app.use(
@@ -24,6 +22,7 @@ app.use(express.json());
 app.use("/songs", songsRouter);
 app.use("/", User);
 app.use("/", authRouter);
+app.use("/", playlistRouter);
 
 if (process.env.NODE_ENV !== "test") {
   connectDB().then(async (error) => {
