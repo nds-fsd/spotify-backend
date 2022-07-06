@@ -8,7 +8,7 @@ const songsSchema = new Schema({
   photo: { type: String, required: true },
 });
 
-const Song = model("songs", songsSchema);
+const Song = model("song", songsSchema);
 
 module.exports = Song;
 
