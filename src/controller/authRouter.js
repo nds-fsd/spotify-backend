@@ -15,7 +15,6 @@ authRouter.post("/login", async (req, res) => {
     return res
       .status(400)
       .json({ error: { email: "This email is not registred" } });
-      
   }
   console.log(user);
   const correctPassword = await comparePassword(user, password);
@@ -48,16 +47,16 @@ authRouter.post("/register", async (req, res) => {
   }
 });
 
-// const configSecurity = (app) => {
-//   app.use(
-//     "/",
-//     jwt({ secret: jwtSecret, algorithms: ["HS256"] }).unless({
-//       path: ["/login", "/register", "/songs"],
-//     })
-//   );
-// };
+const configSecurity = (app) => {
+  app.use(
+    "/",
+    jwt({ secret: jwtSecret, algorithms: ["HS256"] }).unless({
+      path: ["/login", "/register", "/songs"],
+    })
+  );
+};
 
 module.exports = {
   authRouter,
-  // configSecurity,
+  configSecurity,
 };

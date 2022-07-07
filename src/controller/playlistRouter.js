@@ -57,7 +57,9 @@ playlistRouter.patch("/playlist/:id", async (req, res) => {
 playlistRouter.delete("/playlist/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const playlist = await Playlist.findByIdAndRemove(req.params.id);
+    const playlist = await Playlist.findByIdAndRemove(req.params.id, {
+      returnOriginal: true,
+    });
     if (!playlist) {
       return res.status(400).send();
     }

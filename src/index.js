@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 
-// const { authRouter, configSecurity } = require("./controller/authRouter");
-const { authRouter } = require("./controller/authRouter");
+const { authRouter, configSecurity } = require("./controller/authRouter");
+// const { authRouter } = require("./controller/authRouter");
 
 const app = express();
 const { connectDB } = require("./mongo");
@@ -18,7 +18,7 @@ app.use(
   })
 );
 
-// configSecurity(app);
+configSecurity(app);
 app.use(express.json());
 app.use("/songs", songsRouter);
 app.use("/", User);
@@ -35,7 +35,7 @@ if (process.env.NODE_ENV !== "test") {
 
 const server = app.listen(PORT, () => {
   if (process.env.NODE_ENV !== "test") {
-    console.log('"Server is up and running in port 3001"');
+    console.log('"Server is up and running in port 8080"');
   }
 });
 
