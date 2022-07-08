@@ -1,5 +1,4 @@
 const express = require("express");
-const { isAdmin } = require("../middleware/middleware");
 const Playlist = require("../mongo/Schema/Playlist/playlist");
 const playlistRouter = express.Router();
 
