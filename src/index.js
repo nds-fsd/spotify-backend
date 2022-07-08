@@ -3,7 +3,7 @@ const cors = require("cors");
 
 const {
   authRouter,
-  configSecurity,
+  //configSecurity,
 } = require("../src/controller/authRegister");
 
 const app = express();
@@ -20,7 +20,7 @@ app.use(
   })
 );
 
-configSecurity(app);
+//configSecurity(app);
 app.use(express.json());
 app.use("/songs", songRouter);
 app.use("/", User);

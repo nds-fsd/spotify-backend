@@ -1,31 +1,31 @@
 const express = require("express");
 const Artists = require("../mongo/Schema/Artists/artists");
-const artistsRouter = express.Router();
+const artistRouter = express.Router();
 
-artistsRouter.get("", async(req,res)=> {
+artistRouter.get("/artist", async(req,res)=> {
     const allArtists = await Artists.find();
     res.json(allArtists);
 });
 
-artistsRouter.get("/:id", async(req,res)=> {
+artistRouter.get("/artist/:id", async(req,res)=> {
     const { id } = req.params;
-    if (id != undefined){
+    if (id !== undefined){
         const artists = await Artists.findById(id);
         if(!artists){
             return res.status(404).send();
         }
-        return res.json(artists);
+        res.json(artists);
     }
     return res.status(404).send();
 });
 
-artistsRouter.post("", async(req,res)=>{
+artistRouter.post("/artist", async(req,res)=>{
     const body = req.body;
 
     const data = {
      name: body.name,
      bio: body.bio,
-     monthylUsers: body.monthlyUsers,
+     monthlyUsers: body.monthlyUsers,
      albums: body.albums
     };
 
@@ -35,7 +35,7 @@ artistsRouter.post("", async(req,res)=>{
     res.json(newArtist);
 });
 
-artistsRouter.patch("/:id", async (req,res)=>{
+artistRouter.patch("/artist/:id", async (req,res)=>{
     const { id } = req.params ;
     const { body } = req;
     if (id !== undefined){
@@ -45,21 +45,21 @@ artistsRouter.patch("/:id", async (req,res)=>{
         if(!artists){
             return res.status(404).send();
         }
-        return res.json(artist);
+        return res.json(artists);
     }
     return res.status(404).send();
 });
 
-artistsRouter.delete("/:id", async (req, res)=> {
+artistRouter.delete("/artist/:id", async (req, res)=> {
     const { id } = req.params;
     if (id!== undefined){
         const artist = await Artists.findByIdAndRemove(req.params.id, {returnOriginal: true});
-    if (!song){
-        return res.status(404).send();
+    if (!artist){
+        return res.status(400).send();
     }
     return res.status(200).send({message: "Artist Deleted"});
-    }
-    return res.status(404).send();
+}
+return res.status(404).send();
 });
 
 module.exports = artistRouter;
