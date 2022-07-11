@@ -1,7 +1,7 @@
 const express = require("express");
 const Album = require("../mongo/Schema/Album/album");
 const albumRouter = express.Router();
-import { isAdmin } from "../middleware/middleware";
+// const { isAdmin } = require("../middleware/middleware"); //hay que definir a cuales endpoints asegurar con el middleware
 
 albumRouter.get("/album", async (req, res) => {
   const album = await Album.find();
@@ -13,7 +13,7 @@ albumRouter.get("/album/:id", async (req, res) => {
   if (id !== undefined) {
     const album = await Album.findById(id);
     if (!album) {
-      return res.status(400).send;
+      return res.status(404).send();
     }
 
     res.json(album);
@@ -38,16 +38,17 @@ albumRouter.post("/album", async (req, res) => {
   res.json(newAlbum);
 });
 
-albumRouter.patch("album/:id", async (req, res) => {
+albumRouter.patch("/album/:id", async (req, res) => {
   const { id } = req.params;
-  const { body } = req.body;
+  const { body } = req;
   if (id !== undefined) {
-    const album = await Album.findByIdAndUpdate(id);
+    const album = await Album.findOneAndUpdate({ _id: id }, body, {
+      new: true,
+    });
     if (!album) {
       return res.json(400).send();
     }
-
-    res.json(album);
+    return res.json(album);
   }
   return res.status(404).send();
 });
@@ -63,3 +64,5 @@ albumRouter.delete("/album/:id", async (req, res) => {
   }
   return res.status(404).send();
 });
+
+module.exports = albumRouter;

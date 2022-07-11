@@ -33,9 +33,9 @@ playlistRouter.post("/playlist", async (req, res) => {
     songs: body.songs,
   };
 
-  const newPlaylist = new Playlist(data);
-  await newPlaylist.save();
-  res.json(newPlaylist);
+  const playList = new Playlist(data);
+  const newPlaylist = await playList.save();
+  res.status(201).json(newPlaylist);
 });
 
 playlistRouter.patch("/playlist/:id", async (req, res) => {
