@@ -1,6 +1,5 @@
 const { Schema, model } = require("mongoose");
-//const Artists = require("../Artists/artists");
-const Artists = require("./artists");
+const Artists = require("../Artists/artists");
 
 
 const songsSchema = new Schema({
@@ -9,9 +8,9 @@ const songsSchema = new Schema({
   genre: { type: String, required: true },
   releaseDate: { type: Date, required: true },
   photo: { type: String, required: true },
-  artist: { type: Schema.Types.ObjectId,
-  ref: Artists,
-  required: true
+  artists: { type: Schema.Types.ObjectId,
+  ref: "artists",
+  required: true 
 }
 });
 
