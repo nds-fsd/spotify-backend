@@ -1,20 +1,17 @@
 const express = require("express");
 const cors = require("cors");
 
-const { authRouter, configSecurity } = require("./controller/authRouter");
-
 const app = express();
 const { connectDB } = require("./mongo");
 const { disconnectDB } = require("./mongo");
-<<<<<<< HEAD
-const songsRouter = require("./controller/songRouter");
-const playlistRouter = require("./controller/playlistRouter");
+
 const albumRouter = require("./controller/albumRouter");
-=======
 const songRouter = require("./controller/songRouter");
->>>>>>> sprint-3
 const User = require("./controller/userRouter");
 const playlistRouter = require("./controller/playlistRouter");
+const artistRouter = require("./controller/artistsRouter");
+const { authRouter } = require("./controller/authRouter");
+
 const PORT = process.env.PORT || 8080;
 app.use(
   cors({
@@ -23,16 +20,14 @@ app.use(
   })
 );
 
-// configSecurity(app);
+//configSecurity(app);
 app.use(express.json());
 app.use("/songs", songRouter);
 app.use("/", User);
 app.use("/", authRouter);
+app.use("/", artistRouter);
 app.use("/", playlistRouter);
-<<<<<<< HEAD
 app.use("/", albumRouter);
-=======
->>>>>>> sprint-3
 
 if (process.env.NODE_ENV !== "test") {
   connectDB().then(async (error) => {

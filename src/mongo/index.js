@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
+require("dotenv").config();
 const DATABASE_URL = process.env.DATABASE_URL;
 const { User } = require("../mongo/Schema/User/User");
 

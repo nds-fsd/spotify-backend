@@ -1,6 +1,7 @@
 const express = require("express");
-const Song = require("../mongo/Schema/Song/song");
+const Song = require("../mongo/Schema/Song/songs");
 const songRouter = express.Router();
+// const { songsList } = require('./dataSongs/songsList')
 
 songRouter.get("", async (req, res) => {
   const allSongs = await Song.find();
@@ -20,14 +21,11 @@ songRouter.get("/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-<<<<<<< HEAD
-=======
-songRouter.get("/search", async (req, res) => {
+songRouter.post("/search", async (req, res) => {
   const playlist = await Song.find(req.body);
   res.json(playlist);
 });
 
->>>>>>> sprint-3
 songRouter.post("", async (req, res) => {
   const body = req.body;
 
