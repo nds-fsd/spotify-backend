@@ -3,7 +3,7 @@ const { Schema, model } = require("mongoose");
 const Artists = require("./artists");
 
 
-const songsSchema = new Schema({
+const songSchema = new Schema({
   title: { type: String, required: true },
   duration: { type: Number, required: true },
   genre: { type: String, required: true },
@@ -15,7 +15,10 @@ const songsSchema = new Schema({
 }
 });
 
+<<<<<<< HEAD:src/mongo/Schema/songs.js
 const Song = model("song", songsSchema);
+=======
+const Song = model("song", songSchema);
+>>>>>>> 6a4dbe0e01a14db8e92de409dfa1bbfcb0c55582:src/mongo/Schema/Song/song.js
 
 module.exports = Song;
-

@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const UserSchema = new Schema({
@@ -20,24 +20,19 @@ const UserSchema = new Schema({
 UserSchema.pre("save", function (next) {
   if (this.isNew || this.isModified("password")) {
     const document = this;
-
-    bcrypt.hash(document.password, 10, (err, hashedPassword) => {
-      if (err) {
-        next(err);
-      } else {
-        document.password = hashedPassword;
-        next();
-      }
-    });
+    try {
+      document.password = bcrypt.hashSync(document.password);
+      next();
+    } catch (e) {
+      next(e);
+    }
   } else {
     next();
   }
 });
 
-const User = model("register", UserSchema);
-
-UserSchema.methods.comparePassword = async function (password) {
-  return await bcrypt.compare(password, this.password);
+const comparePassword = async (user, password) => {
+  return await bcrypt.compareSync(password, user.password);
 };
 
 const generateJWT = function (user) {
@@ -57,4 +52,6 @@ const generateJWT = function (user) {
   });
 };
 
-module.exports = { User, generateJWT };
+const User = model("register", UserSchema);
+
+module.exports = { User, generateJWT, comparePassword };
