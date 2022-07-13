@@ -13,10 +13,11 @@ const songsSchema = new Schema({
     type: Date, required: true },
   photo: { 
     type: String, required: true },
-  artists: { 
+  artist: { 
     type: Schema.Types.ObjectId,
-   ref: "artists", //required: true 
-}
+    ref: "artists",
+    required: true,
+  }
 });
 
 const Song = model("song", songsSchema);
