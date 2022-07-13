@@ -1,0 +1,16 @@
+FROM node:16
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Install app dependencies
+COPY package*.json ./
+
+RUN npm install
+JWT_SECRET=spoty
+DATABASE_URL= root:spotify@proyectospotify.y4horu0.mongodb.net
+
+COPY src src
+
+EXPOSE 8080
+CMD [ "node", "src/index.js" ]
