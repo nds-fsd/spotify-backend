@@ -15,10 +15,6 @@ const songSchema = new Schema({
 }
 });
 
-<<<<<<< HEAD:src/mongo/Schema/songs.js
 const Song = model("song", songsSchema);
-=======
-const Song = model("song", songSchema);
->>>>>>> 6a4dbe0e01a14db8e92de409dfa1bbfcb0c55582:src/mongo/Schema/Song/song.js
 
 module.exports = Song;
