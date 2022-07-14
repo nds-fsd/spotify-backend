@@ -4,14 +4,14 @@ const songRouter = express.Router();
 // const { songsList } = require('./dataSongs/songsList')
 
 songRouter.get("", async (req, res) => {
-  const allSongs = await Song.find();
+  const allSongs = await Song.find().populate({path:'artist', select:"name"});
   res.json(allSongs);
 });
 
 songRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const song = await Song.findById(id);
+    const song = await Song.findById(id).populate({path:'artist', select:"name"});
     if (!song) {
       return res.status(404).send();
     }
