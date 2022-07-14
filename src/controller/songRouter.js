@@ -1,14 +1,8 @@
 const express = require("express");
-<<<<<<< HEAD
-const Song = require("../mongo/Schema/Song/songs");
-const songRouter = express.Router();
-// const { songsList } = require('./dataSongs/songsList')
-=======
 const Song = require("../mongo/Schema/Song/song");
 const songRouter = express.Router();
->>>>>>> 6a4dbe0e01a14db8e92de409dfa1bbfcb0c55582
 
-songRouter.get("", async (req, res) => {
+songRouter.get("/", async (req, res) => {
   const allSongs = await Song.find();
   res.json(allSongs);
 });
@@ -26,7 +20,7 @@ songRouter.get("/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-songRouter.post("", async (req, res) => {
+songRouter.post("/", async (req, res) => {
   const body = req.body;
 
   const data = {
@@ -35,6 +29,7 @@ songRouter.post("", async (req, res) => {
     genre: body.genre,
     releaseDate: body.releaseDate,
     photo: body.photo,
+    artist: body.artist
   };
 
   const newSong = new Song(data);
@@ -75,10 +70,4 @@ songRouter.delete("/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-<<<<<<< HEAD
-//me elimina el primer elemento de mi bbdd
-//preguntar findByIdAndDelete y findOneAndDelete
-
-=======
->>>>>>> 6a4dbe0e01a14db8e92de409dfa1bbfcb0c55582
 module.exports = songRouter;
