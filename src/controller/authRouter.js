@@ -45,16 +45,16 @@ authRouter.post("/register", async (req, res) => {
   }
 });
 
-// const configSecurity = (app) => {
-//   app.use(
-//     "/",
-//     jwt({ secret: jwtSecret, algorithms: ["HS256"] }).unless({
-//       path: ["/login", "/register", "/songs", "/playlist"],
-//     })
-//   );
-// };
+const configSecurity = (app) => {
+  app.use(
+    "/",
+    jwt({ secret: jwtSecret, algorithms: ["HS256"] }).unless({
+      path: ["/login", "/register", "/song"],
+    })
+  );
+};
 
 module.exports = {
   authRouter,
-  // configSecurity,
+  configSecurity,
 };
