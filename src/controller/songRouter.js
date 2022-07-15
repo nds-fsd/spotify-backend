@@ -21,7 +21,7 @@ songRouter.get("/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-songRouter.post("", async (req, res) => {
+songRouter.post("/", async (req, res) => {
   const body = req.body;
 
   const data = {
@@ -73,6 +73,5 @@ songRouter.delete("/:id", async (req, res) => {
   }
   return res.status(404).send();
 });
-
 
 module.exports = songRouter;

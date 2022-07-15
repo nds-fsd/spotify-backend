@@ -1,12 +1,12 @@
 const {Schema, model} = require('mongoose');
 
-const artistsSchema = new Schema ({
+const ArtistSchema = new Schema ({
     name: {type: String, required: true },
     bio: {type: String, required: true},
     monthlyUsers: {type: Number, required: true},
     albums: []
 });
 
-const Artists = model("artists", artistsSchema);
+const Artist = model("artist", ArtistSchema);
 
-module.exports = Artists;
+module.exports = Artist;

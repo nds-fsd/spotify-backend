@@ -22,7 +22,7 @@ app.use(
 
 //configSecurity(app);
 app.use(express.json());
-app.use("/songs", songRouter);
+app.use("/songs", songsRouter);
 app.use("/", User);
 app.use("/", authRouter);
 app.use("/", artistRouter);
