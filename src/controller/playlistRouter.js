@@ -3,14 +3,14 @@ const Playlist = require("../mongo/Schema/Playlist/playlist");
 const playlistRouter = express.Router();
 
 playlistRouter.get("/playlist", async (req, res) => {
-  const playlist = await Playlist.find();
+  const playlist = await Playlist.find().populate("songs");
   res.json(playlist);
 });
 
 playlistRouter.get("/playlist/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const playlist = await Playlist.findById(id);
+    const playlist = await Playlist.findById(id).populate("songs");
 
     if (!playlist) {
       return res.status(400).send();

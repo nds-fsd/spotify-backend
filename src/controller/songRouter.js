@@ -3,7 +3,7 @@ const Song = require("../mongo/Schema/Song/song");
 const songRouter = express.Router();
 // const { songsList } = require('./dataSongs/songsList')
 
-songRouter.get("", async (req, res) => {
+songRouter.get("/", async (req, res) => {
   const allSongs = await Song.find().populate({path:'artist', select:"name"});
   res.json(allSongs);
 });
@@ -30,7 +30,7 @@ songRouter.post("/", async (req, res) => {
     genre: body.genre,
     releaseDate: body.releaseDate,
     photo: body.photo,
-    artist: body.artists,
+    artist: body.artist,
     //album: body.album
   };
 
@@ -51,7 +51,7 @@ songRouter.patch("/:id", async (req, res) => {
       new: true,
     });
     if (!song) {
-      return res.status(404).send();
+      return res.status(400).send();
     }
 
     return res.json(song);
@@ -63,9 +63,7 @@ songRouter.patch("/:id", async (req, res) => {
 songRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const song = await Song.findByIdAndRemove(req.params.id, {
-      returnOriginal: true,
-    });
+    const song = await Song.findByIdAndRemove(req.params.id);
     if (!song) {
       return res.status(404).send();
     }
