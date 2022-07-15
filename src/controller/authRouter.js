@@ -15,11 +15,8 @@ authRouter.post("/login", async (req, res) => {
     return res
       .status(400)
       .json({ error: { email: "This email is not registred" } });
-      
   }
-  console.log(user);
   const correctPassword = await comparePassword(user, password);
-  console.log(correctPassword);
   if (!correctPassword) {
     return res.status(400).json({ error: { password: "Wrong password" } });
   }
@@ -52,7 +49,7 @@ const configSecurity = (app) => {
   app.use(
     "/",
     jwt({ secret: jwtSecret, algorithms: ["HS256"] }).unless({
-      path: ["/login", "/register", "/songs"],
+      path: ["/login", "/register", "/song"],
     })
   );
 };

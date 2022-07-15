@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@jridgewell/gen-mapping": "^0.3.2",
+    "@jridgewell/resolve-uri": "^3.1.0",
+    "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
@@ -19,6 +22,7 @@
     "express-ajv-middleware": "^2.0.2",
     "express-jwt": "^7.7.5",
     "install": "^0.13.0",
+    "jsesc": "^3.0.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.6"
   },
