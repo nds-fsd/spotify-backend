@@ -4,7 +4,7 @@ const cors = require("cors");
 const {
   authRouter,
   //configSecurity,
-} = require("../src/controller/authRegister");
+} = require("../src/controller/authRouter");
 
 const app = express();
 const { connectDB } = require("./mongo");
@@ -22,7 +22,7 @@ app.use(
 
 //configSecurity(app);
 app.use(express.json());
-app.use("/songs", songsRouter);
+app.use("/songs", songRouter);
 app.use("/", User);
 app.use("/", authRouter);
 app.use("/", artistRouter);

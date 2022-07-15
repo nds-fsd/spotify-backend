@@ -1,5 +1,5 @@
 const express = require("express");
-const Song = require("../mongo/Schema/Song/songs");
+const Song = require("../mongo/Schema/Song/song");
 const songRouter = express.Router();
 // const { songsList } = require('./dataSongs/songsList')
 
