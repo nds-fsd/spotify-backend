@@ -10,7 +10,7 @@ const songRouter = require("./controller/songRouter");
 const User = require("./controller/userRouter");
 const playlistRouter = require("./controller/playlistRouter");
 const artistRouter = require("./controller/artistsRouter");
-const { authRouter } = require("./controller/authRouter");
+const { authRouter, configSecurity } = require("./controller/authRouter");
 
 const PORT = process.env.PORT || 8080;
 app.use(
@@ -20,7 +20,7 @@ app.use(
   })
 );
 
-//configSecurity(app);
+configSecurity(app);
 app.use(express.json());
 app.use("/songs", songRouter);
 app.use("/", User);
