@@ -20,7 +20,6 @@ app.use(
   })
 );
 
-configSecurity(app);
 app.use(express.json());
 app.use("/songs", songRouter);
 app.use("/", User);
@@ -37,9 +36,12 @@ if (process.env.NODE_ENV !== "test") {
   });
 }
 
+configSecurity(app);
+
+
 const server = app.listen(PORT, () => {
   if (process.env.NODE_ENV !== "test") {
-    console.log('"Server is up and running in port 8080"');
+    console.log(`Server is up and running in port ${PORT}`);
   }
 });
 
