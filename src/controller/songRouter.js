@@ -31,14 +31,14 @@ songRouter.post("/", async (req, res) => {
     releaseDate: body.releaseDate,
     photo: body.photo,
     artist: body.artist,
-    //album: body.album
+    
   };
 
   const newSong = new Song(data);
 
   await newSong.save();
 
-  const song = await Song.findById(newSong._id).populate({path:'artist', select:"name"})/*.populate({path:'album',select:'name'})*/ ;
+  const song = await Song.findById(newSong._id).populate({path:'artist', select:"name"});
 
   res.json(song);
 });

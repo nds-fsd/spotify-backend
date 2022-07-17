@@ -3,14 +3,20 @@ const Playlist = require("../mongo/Schema/Playlist/playlist");
 const playlistRouter = express.Router();
 
 playlistRouter.get("/playlist", async (req, res) => {
-  const playlist = await Playlist.find().populate("songs");
+  const playlist = await Playlist.find().populate({
+    path: "song",
+    select: "title",
+  });
   res.json(playlist);
 });
 
 playlistRouter.get("/playlist/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const playlist = await Playlist.findById(id).populate("songs");
+    const playlist = await Playlist.findById(id).populate({
+      path: "song",
+      select: "title",
+    });
 
     if (!playlist) {
       return res.status(400).send();
@@ -31,6 +37,9 @@ playlistRouter.post("/playlist", async (req, res) => {
   const data = {
     name: body.name,
     songs: body.songs,
+    photo: body.photo,
+    description: body.description,
+    user: body.user,
   };
 
   const playList = new Playlist(data);
