@@ -6,6 +6,7 @@ const { connectDB } = require("./mongo");
 const { disconnectDB } = require("./mongo");
 
 const albumRouter = require("./controller/albumRouter");
+const genreRouter = require("./controller/genreRouter");
 const songRouter = require("./controller/songRouter");
 const User = require("./controller/userRouter");
 const playlistRouter = require("./controller/playlistRouter");
@@ -28,6 +29,7 @@ app.use("/", authRouter);
 app.use("/", artistRouter);
 app.use("/", playlistRouter);
 app.use("/", albumRouter);
+app.use("/", genreRouter);
 
 if (process.env.NODE_ENV !== "test") {
   connectDB().then(async (error) => {
