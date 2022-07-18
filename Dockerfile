@@ -7,8 +7,6 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install
-JWT_SECRET=spoty
-DATABASE_URL= root:spotify@proyectospotify.y4horu0.mongodb.net
 
 COPY src src
 
