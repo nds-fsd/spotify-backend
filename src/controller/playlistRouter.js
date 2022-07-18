@@ -1,8 +1,9 @@
 const express = require("express");
+import { authUser, isAdmin } from "../middleware/middleware";
 const Playlist = require("../mongo/Schema/Playlist/playlist");
 const playlistRouter = express.Router();
 
-playlistRouter.get("/playlist", async (req, res) => {
+playlistRouter.get("/playlist", authUser, isAdmin, async (req, res) => {
   const playlist = await Playlist.find().populate({
     path: "song",
     select: "title",
@@ -10,7 +11,7 @@ playlistRouter.get("/playlist", async (req, res) => {
   res.json(playlist);
 });
 
-playlistRouter.get("/playlist/:id", async (req, res) => {
+playlistRouter.get("/playlist/:id", authUser, isAdmin ,async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
     const playlist = await Playlist.findById(id).populate({
@@ -47,7 +48,7 @@ playlistRouter.post("/playlist", async (req, res) => {
   res.status(201).json(newPlaylist);
 });
 
-playlistRouter.patch("/playlist/:id", async (req, res) => {
+playlistRouter.patch("/playlist/:id", authUser, isAdmin, async (req, res) => {
   const { id } = req.params;
   const { body } = req;
   if (id !== undefined) {
@@ -62,7 +63,7 @@ playlistRouter.patch("/playlist/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-playlistRouter.delete("/playlist/:id", async (req, res) => {
+playlistRouter.delete("/playlist/:id", authUser, isAdmin,  async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
     const playlist = await Playlist.findByIdAndRemove(req.params.id, {
