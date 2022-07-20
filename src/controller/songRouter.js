@@ -1,6 +1,8 @@
 const express = require("express");
 const Song = require("../mongo/Schema/Song/song");
 const songRouter = express.Router();
+const { isAdmin } = require("../middleware/middleware");
+
 // const { songsList } = require('./dataSongs/songsList')
 
 songRouter.get("/", async (req, res) => {
@@ -21,7 +23,7 @@ songRouter.get("/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-songRouter.post("/", async (req, res) => {
+songRouter.post("/", isAdmin, async (req, res) => {
   const body = req.body;
 
   const data = {
@@ -43,7 +45,7 @@ songRouter.post("/", async (req, res) => {
   res.json(song);
 });
 
-songRouter.patch("/:id", async (req, res) => {
+songRouter.patch("/:id", isAdmin, async (req, res) => {
   const { id } = req.params;
   const { body } = req;
   if (id !== undefined) {
