@@ -25,7 +25,7 @@ app.use("/songs", songRouter);
 app.use("/", User);
 app.use("/", authRouter);
 app.use("/", artistRouter);
-app.use("/", playlistRouter);
+// app.use("/", playlistRouter);
 app.use("/", albumRouter);
 
 if (process.env.NODE_ENV !== "test") {
@@ -37,7 +37,6 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 configSecurity(app);
-
 
 const server = app.listen(PORT, () => {
   if (process.env.NODE_ENV !== "test") {
