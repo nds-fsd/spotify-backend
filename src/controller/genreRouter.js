@@ -23,7 +23,8 @@ genreRouter.post("/genre", async (req, res) => {
   const { body } = req;
 
   const data = {
-    genre: body.genre,
+    name: body.name,
+    description: body.description,
   };
   const newGenre = new Genre(data);
 
