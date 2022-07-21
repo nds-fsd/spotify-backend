@@ -6,7 +6,7 @@ const songSchema = new Schema({
   genre: { type: String, required: true },
   releaseDate: { type: Date, required: true },
   photo: { type: String, required: true },
-  artist: { type: Schema.Types.ObjectId, ref: 'artist', required: true}
+  artist: { type: Schema.Types.ObjectId, ref: 'artist'}
 });
 
 const Song = model("song", songSchema);

@@ -23,7 +23,8 @@ router.post("/user", isAdmin, async (req, res) => {
   const document = req.body;
   const user = await UserService.create(document);
   return res.status(201).json(user);
-});
+} 
+);
 
 router.put("/user/:id", async (req, res) => {
   const document = req.body;
