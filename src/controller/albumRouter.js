@@ -4,18 +4,18 @@ const albumRouter = express.Router();
 // const { isAdmin } = require("../middleware/middleware"); //hay que definir a cuales endpoints asegurar con el middleware
 
 albumRouter.get("/album", async (req, res) => {
-  const album = await Album.find()
-    .populate({ path: "song", select: "title" })
-    .populate({ path: "artist", select: "name" });
+  const album = await Album.find();
+  // /* .populate({ path: "song", select: "title" })
+  //   .populate({ path: "artist", select: "name" });*/
   res.json(album);
 });
 
 albumRouter.get("/album/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const album = await Album.findById(id)
-      .populate({ path: "song", select: "title" })
-      .populate({ path: "artist", select: "name" });
+    const album = await Album.findById(id);
+    /* .populate({ path: "song", select: "title" })
+      .populate({ path: "artist", select: "name" });*/
     if (!album) {
       return res.status(404).send();
     }
