@@ -1,6 +1,7 @@
 const express = require("express");
 const Artists = require("../mongo/Schema/Artists/artists");
 const artistRouter = express.Router();
+const { isAdmin } = require("../middleware/middleware");
 
 artistRouter.get("/artist", async (req, res) => {
   const allArtists = await Artists.find().populate({
@@ -23,7 +24,7 @@ artistRouter.get("/artist/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-artistRouter.post("/artist", async (req, res) => {
+artistRouter.post("/artist", isAdmin, async (req, res) => {
   const body = req.body;
 
   const data = {
@@ -39,7 +40,7 @@ artistRouter.post("/artist", async (req, res) => {
   res.json(newArtist);
 });
 
-artistRouter.patch("/artist/:id", async (req, res) => {
+artistRouter.patch("/artist/:id", isAdmin, async (req, res) => {
   const { id } = req.params;
   const { body } = req;
   if (id !== undefined) {
@@ -54,7 +55,7 @@ artistRouter.patch("/artist/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-artistRouter.delete("/artist/:id", async (req, res) => {
+artistRouter.delete("/artist/:id", isAdmin, async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
     const artist = await Artists.findByIdAndRemove(req.params.id, {
