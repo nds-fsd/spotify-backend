@@ -5,8 +5,10 @@ const songSchema = new Schema({
   duration: { type: Number, required: true },
   genre: { type: String, required: true },
   releaseDate: { type: Date, required: true },
+  soundUrl: { type: String , required: false},
   photo: { type: String, required: true },
   artist: { type: Schema.Types.ObjectId, ref: 'artist', required: true}
+ 
 });
 
 const Song = model("song", songSchema);

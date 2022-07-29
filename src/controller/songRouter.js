@@ -29,6 +29,7 @@ songRouter.post("/", async (req, res) => {
     duration: body.duration,
     genre: body.genre,
     releaseDate: body.releaseDate,
+    soundUrl: body.soundUrl,
     photo: body.photo,
     artist: body.artist,
     //album: body.album
