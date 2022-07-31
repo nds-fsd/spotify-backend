@@ -49,7 +49,7 @@ const configSecurity = (app) => {
   app.use(
     "/",
     jwt({ secret: jwtSecret, algorithms: ["HS256"] }).unless({
-      path: ["/login", "/register", "/song"],
+      path: ["/login", "/register"],
     })
   );
 };

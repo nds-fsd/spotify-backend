@@ -4,7 +4,14 @@ const albumRouter = express.Router();
 const { isAdmin } = require("../middleware/middleware");
 
 albumRouter.get("/album", async (req, res) => {
-  const album = await Album.find()
+  const { query: queryParams } = req;
+  let query = {};
+  if (queryParams.search) {
+    query = {
+      $or: [{ name: { $regex: queryParams.search, $options: "i" } }],
+    };
+  }
+  const album = await Album.find(query)
     // .populate({ path: "songs", select: "title" })
     .populate({ path: "artist", select: "name" });
   res.json(album);

@@ -28,6 +28,17 @@ const remove = async (id) => {
   return result !== null;
 };
 
+// const deleteUser = async (id) => {
+//   if (id !== undefined) {
+//     const user = await User.findByIdAndRemove(req.params.id);
+//     if (!song) {
+//       return res.status(404).send();
+//     }
+//     return res.status(200).send({ message: "Song Deleted" });
+//   }
+//   return res.status(404).send();
+// };
+
 module.exports = {
   create,
   read,

@@ -25,20 +25,34 @@ const getPlaylistMiddleware = async (req, res, next) => {
 };
 
 playlistRouter.get("/playlist", async (req, res) => {
+  const { query: queryParams } = req;
+  let query = {};
+  if (queryParams.search) {
+    query = {
+      $or: [
+        { name: { $regex: queryParams.search, $options: "i" } },
+        { description: { $regex: queryParams.search, $options: "i" } },
+      ],
+    };
+  }
   const userId = req.auth.id;
 
   let playlists = [];
 
   if (req.auth.role === "ADMIN") {
-    playlists = await Playlist.find().populate({
-      path: "song",
-      select: "title",
-    });
+    playlists = await Playlist.find(query)
+      .populate({
+        path: "song",
+        select: "title",
+      })
+      .populate({ path: "user", select: "name" });
   } else {
-    playlists = await Playlist.find({ user: userId }).populate({
-      path: "song",
-      select: "title",
-    });
+    playlists = await Playlist.find({ user: userId })
+      .populate({
+        path: "song",
+        select: "title",
+      })
+      .populate({ path: "user", select: "name" });
   }
   res.json(playlists);
 });

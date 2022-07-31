@@ -4,7 +4,17 @@ const artistRouter = express.Router();
 const { isAdmin } = require("../middleware/middleware");
 
 artistRouter.get("/artist", async (req, res) => {
-  const allArtists = await Artists.find().populate({
+  const { query: queryParams } = req;
+  let query = {};
+  if (queryParams.search) {
+    query = {
+      $or: [
+        { name: { $regex: queryParams.search, $options: "i" } },
+        { bio: { $regex: queryParams.search, $options: "i" } },
+      ],
+    };
+  }
+  const allArtists = await Artists.find(query).populate({
     path: "albums",
     select: "name",
   });
