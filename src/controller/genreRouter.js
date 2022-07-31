@@ -3,7 +3,17 @@ const Genre = require("../mongo/Schema/Genre/genre");
 const genreRouter = express.Router();
 
 genreRouter.get("/genre", async (req, res) => {
-  const genre = await Genre.find();
+  const { query: queryParams } = req;
+  let query = {};
+  if (queryParams.search) {
+    query = {
+      $or: [
+        { name: { $regex: queryParams.search, $options: "i" } },
+        { description: { $regex: queryParams.search, $options: "i" } },
+      ],
+    };
+  }
+  const genre = await Genre.find(query);
   res.json(genre);
 });
 
@@ -24,11 +34,12 @@ genreRouter.post("/genre", async (req, res) => {
 
   const data = {
     name: body.name,
+    photo: body.photo,
     description: body.description,
   };
   const newGenre = new Genre(data);
 
-  await newGenre.sabe();
+  await newGenre.save();
   res.json(newGenre);
 });
 
