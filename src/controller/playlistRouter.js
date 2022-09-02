@@ -1,6 +1,6 @@
-const express = require("express");
-const Playlist = require("../mongo/Schema/Playlist/playlist");
-const playlistRouter = express.Router();
+// const express = require("express");
+// const Playlist = require("../mongo/Schema/Playlist/playlist");
+// const playlistRouter = express.Router();
 
 // const getPlaylistMiddleware = async (req, res, next) => {
 //   const id = req.params.id;
@@ -24,88 +24,149 @@ const playlistRouter = express.Router();
 //   next();
 // };
 
+// playlistRouter.get("/playlist", async (req, res) => {
+//   const { query: queryParams } = req;
+//   let query = {};
+//   if (queryParams.search) {
+//     query = {
+//       $or: [
+//         { name: { $regex: queryParams.search, $options: "i" } },
+//         { description: { $regex: queryParams.search, $options: "i" } },
+//       ],
+//     };
+//   }
+//   const userId = req.auth.id;
+
+//   let playlists = [];
+
+//   if (req.auth.role === "ADMIN") {
+//     playlists = await Playlist.find(query)
+//       .populate({
+//         path: "song",
+//         select: "title",
+//       })
+//       .populate({ path: "user", select: "name" });
+//   } else {
+//     playlists = await Playlist.find({ user: userId })
+//       .populate({
+//         path: "song",
+//         select: "title",
+//       })
+//       .populate({ path: "user", select: "name" });
+//   }
+//   res.json(playlists);
+// });
+
+// playlistRouter.get("/playlist/:id", async (req, res) => {
+//   return res.status(200).json(req.playlist);
+// });
+
+// playlistRouter.get("/playlist/search", async (req, res) => {
+//   const playlist = await Playlist.find(req.body);
+//   res.json(playlist);
+// });
+
+// playlistRouter.post("/playlist", async (req, res) => {
+//   const body = req.body;
+
+//   const data = {
+//     name: body.name,
+//     song: body.song,
+//     photo: body.photo,
+//     description: body.description,
+//     user: body.user,
+//   };
+
+//   const playList = new Playlist(data);
+//   const newPlaylist = await playList.save();
+//   res.status(201).json(newPlaylist);
+// });
+
+// playlistRouter.patch(
+//   "/playlist/:id",
+//   getPlaylistMiddleware,
+//   async (req, res) => {
+//     const playlist = await Playlist.findOneAndUpdate(
+//       { _id: req.params.id },
+//       req.body,
+//       {
+//         new: true,
+//       }
+//     );
+//     return res.status(200).json(playlist);
+//   }
+// );
+
+// playlistRouter.delete(
+//   "/playlist/:id",
+//   getPlaylistMiddleware,
+//   async (req, res) => {
+//     const playlist = await Playlist.findByIdAndRemove(req.params.id, {
+//       returnOriginal: true,
+//     });
+//     return res.status(204).send();
+//   }
+// );
+
+// module.exports = playlistRouter;
+
+const express = require("express");
+const Playlist = require("../mongo/Schema/Playlist/playlist");
+const playlistRouter = express.Router();
 playlistRouter.get("/playlist", async (req, res) => {
-  const { query: queryParams } = req;
-  let query = {};
-  if (queryParams.search) {
-    query = {
-      $or: [
-        { name: { $regex: queryParams.search, $options: "i" } },
-        { description: { $regex: queryParams.search, $options: "i" } },
-      ],
-    };
-  }
-  const userId = req.auth.id;
-
-  let playlists = [];
-
-  if (req.auth.role === "ADMIN") {
-    playlists = await Playlist.find(query)
-      .populate({
-        path: "song",
-        select: "title",
-      })
-      .populate({ path: "user", select: "name" });
-  } else {
-    playlists = await Playlist.find({ user: userId })
-      .populate({
-        path: "song",
-        select: "title",
-      })
-      .populate({ path: "user", select: "name" });
-  }
-  res.json(playlists);
+  const playlist = await Playlist.find().populate("song");
+  res.json(playlist);
 });
-
 playlistRouter.get("/playlist/:id", async (req, res) => {
-  return res.status(200).json(req.playlist);
+  const { id } = req.params;
+  if (id !== undefined) {
+    const playlist = await Playlist.findById(id).populate("song");
+    if (!playlist) {
+      return res.status(400).send();
+    }
+    res.json(playlist);
+  }
+  return res.status(404).send();
 });
-
 playlistRouter.get("/playlist/search", async (req, res) => {
   const playlist = await Playlist.find(req.body);
   res.json(playlist);
 });
-
 playlistRouter.post("/playlist", async (req, res) => {
   const body = req.body;
-
   const data = {
     name: body.name,
-    song: body.song,
-    photo: body.photo,
-    description: body.description,
-    user: body.user,
+    songs: body.songs,
   };
-
   const playList = new Playlist(data);
   const newPlaylist = await playList.save();
   res.status(201).json(newPlaylist);
 });
-
-playlistRouter.patch(
-  "/playlist/:id",
-  // getPlaylistMiddleware,
-  async (req, res) => {
-    const playlist = await Playlist.findOneAndUpdate(
-      { _id: req.params.id },
-      req.body,
-      {
-        new: true,
-      }
-    );
-    return res.status(200).json(playlist);
+playlistRouter.patch("/playlist/:id", async (req, res) => {
+  const { id } = req.params;
+  const { body } = req;
+  if (id !== undefined) {
+    const playlist = await Playlist.findOneAndUpdate({ _id: id }, body, {
+      new: true,
+    });
+    if (!playlist) {
+      return res.status(400).send();
+    }
+    return res.json(playlist);
   }
-);
-
-playlistRouter.delete(
-  "/playlist/:id",
-  // getPlaylistMiddleware,
-  async (req, res) => {
+  return res.status(404).send();
+});
+playlistRouter.delete("/playlist/:id", async (req, res) => {
+  const { id } = req.params;
+  if (id !== undefined) {
     const playlist = await Playlist.findByIdAndRemove(req.params.id, {
       returnOriginal: true,
     });
-    return res.status(204).send();
+    if (!playlist) {
+      return res.status(400).send();
+    }
+    return res.status(200).send({ message: "Playlist Deleted" });
   }
-);
-
+  return res.status(404).send();
+});
 module.exports = playlistRouter;

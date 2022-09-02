@@ -5,7 +5,7 @@ const songSchema = new Schema({
   duration: { type: Number, required: true },
   genre: { type: Schema.Types.ObjectId, ref: "genre" },
   releaseYear: { type: Number, required: true },
-  soundUrl: [{ type: String, required: false }],
+  soundUrl: { type: String, required: false },
   photo: { type: String, required: true },
   artist: { type: Schema.Types.ObjectId, ref: "artist" },
 });
