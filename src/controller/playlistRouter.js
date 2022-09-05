@@ -57,7 +57,7 @@ playlistRouter.get("/playlist", async (req, res) => {
   res.json(playlists);
 });
 
-playlistRouter.get("/playlist/:id", getPlaylistMiddleware, async (req, res) => {
+playlistRouter.get("/playlist/:id", async (req, res) => {
   return res.status(200).json(req.playlist);
 });
 
@@ -71,7 +71,7 @@ playlistRouter.post("/playlist", async (req, res) => {
 
   const data = {
     name: body.name,
-    songs: body.songs,
+    song: body.song,
     photo: body.photo,
     description: body.description,
     user: body.user,
