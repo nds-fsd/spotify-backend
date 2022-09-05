@@ -12,9 +12,7 @@ songRouter.get("/", async (req, res) => {
     query = {
       $or: [
         { title: { $regex: queryParams.search, $options: "i" } },
-        { genre: { $regex: queryParams.search, $options: "i" } },
-        { soundUrl: [{ $regex: queryParams.search, $options: "i" }] },
-        { artist: { $regex: queryParams.search } },
+        { soundUrl: { $regex: queryParams.search, $options: "i" } },
       ],
     };
   }

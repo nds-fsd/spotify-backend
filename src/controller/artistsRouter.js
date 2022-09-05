@@ -39,6 +39,7 @@ artistRouter.post("/artist", isAdmin, async (req, res) => {
 
   const data = {
     name: body.name,
+    photo: body.photo,
     bio: body.bio,
     monthlyUsers: body.monthlyUsers,
     albums: body.albums,
