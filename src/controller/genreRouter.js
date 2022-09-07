@@ -13,14 +13,15 @@ genreRouter.get("/genre", async (req, res) => {
       ],
     };
   }
-  const genre = await Genre.find(query);
+  const genre = await Genre.find(query).populate("song");
+
   res.json(genre);
 });
 
 genreRouter.get("/genre/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const genre = await Genre.findById(id);
+    const genre = await Genre.findById(id).populate("song");
     if (!genre) {
       return res.status(404).send();
     }
@@ -36,6 +37,7 @@ genreRouter.post("/genre", async (req, res) => {
     name: body.name,
     photo: body.photo,
     description: body.description,
+    song: body.song,
   };
   const newGenre = new Genre(data);
 
