@@ -12,26 +12,33 @@ songRouter.get("/", async (req, res) => {
     query = {
       $or: [
         { title: { $regex: queryParams.search, $options: "i" } },
-        { genre: { $regex: queryParams.search, $options: "i" } },
         { soundUrl: { $regex: queryParams.search, $options: "i" } },
-        // { artist: { $regex: queryParams.search } },
       ],
     };
   }
-  const allSongs = await Song.find(query).populate({
-    path: "artist",
-    select: "name",
-  });
+  const allSongs = await Song.find(query)
+    .populate({
+      path: "artist",
+      select: "name",
+    })
+    .populate("genre");
   res.json(allSongs);
+});
+
+songRouter.get("/search", async (req, res) => {
+  const search = req.query.search || "";
+  const song = await Song.find({ artist: { $regex: search, $options: "i" } });
 });
 
 songRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const song = await Song.findById(id).populate({
-      path: "artist",
-      select: "name",
-    });
+    const song = await Song.findById(id)
+      .populate({
+        path: "artist",
+        select: "name",
+      })
+      .populate("genre");
     if (!song) {
       return res.status(404).send();
     }
@@ -48,7 +55,7 @@ songRouter.post("/", isAdmin, async (req, res) => {
     title: body.title,
     duration: body.duration,
     genre: body.genre,
-    releaseDate: body.releaseDate,
+    releaseYear: body.releaseYear,
     soundUrl: body.soundUrl,
     photo: body.photo,
     artist: body.artist,

@@ -11,6 +11,7 @@ router.get("/user", async (req, res) => {
       $or: [
         { name: { $regex: queryParams.search, $options: "i" } },
         { email: { $regex: queryParams.search, $options: "i" } },
+        { role: { $regex: queryParams.search, $options: "i" } },
       ],
     };
   }
