@@ -5,7 +5,7 @@ const albumSchema = new Schema({
   photo: { type: String, required: true },
   releaseYear: { type: Number, required: true },
   artist: { type: Schema.Types.ObjectId, ref: "artist" },
-  songs: [{ type: Schema.Types.ObjectId, ref: "Song" }],
+  songs: [{ type: Schema.Types.ObjectId, ref: "song" }],
 });
 
 const Album = model("album", albumSchema);

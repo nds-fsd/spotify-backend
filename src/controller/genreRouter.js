@@ -13,7 +13,14 @@ genreRouter.get("/genre", async (req, res) => {
       ],
     };
   }
-  const genre = await Genre.find(query).populate("song");
+
+  let limit = undefined;
+
+  if (queryParams.limit) {
+    limit = queryParams.limit;
+  }
+
+  const genre = await Genre.find(query, null, { limit }).populate("song");
 
   res.json(genre);
 });

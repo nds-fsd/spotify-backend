@@ -11,9 +11,15 @@ albumRouter.get("/album", async (req, res) => {
       $or: [{ name: { $regex: queryParams.search, $options: "i" } }],
     };
   }
-  const album = await Album.find(query)
+  let limit = undefined;
+
+  if (queryParams.limit) {
+    limit = queryParams.limit;
+  }
+  const album = await Album.find(query, null, { limit })
     // .populate({ path: "songs", select: "title" })
-    .populate({ path: "artist", select: "name" });
+    .populate({ path: "artist", select: "name" })
+    .populate("songs");
   res.json(album);
 });
 
