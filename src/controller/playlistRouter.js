@@ -119,6 +119,7 @@ playlistRouter.patch(
       req.body,
       {
         new: true,
+        
       }
     );
     return res.status(200).json(playlist);
