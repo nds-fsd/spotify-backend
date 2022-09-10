@@ -4,13 +4,13 @@ const playlistRouter = express.Router();
 
 const getPlaylistMiddleware = async (req, res, next) => {
   const id = req.params.id;
-
+  console.log(id);
   if (!id) {
     return res.status(404).send();
   }
 
   const playlist = await Playlist.findById(id);
-
+  console.log(playlist);
   if (!playlist) {
     return res.status(404).send();
   }
@@ -58,19 +58,18 @@ playlistRouter.get("/playlist", async (req, res) => {
 });
 
 // playlistRouter.get("/playlist/:id", async (req, res) => {
- // return res.status(200).json(req.playlist);
+// return res.status(200).json(req.playlist);
 // });
 playlistRouter.get("/playlist/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
     const playlist = await Playlist.findById(id).populate({
       path: "song",
-     
-    })
+    });
     if (!playlist) {
       return res.status(404).send();
     }
-    res.json(playlist)
+    res.json(playlist);
   }
   return res.status(404).send();
 });
@@ -97,6 +96,21 @@ playlistRouter.post("/playlist", async (req, res) => {
 });
 
 playlistRouter.patch(
+  "/playlist/:id/add-song",
+  // getPlaylistMiddleware,
+  async (req, res) => {
+    const { songId } = req.body;
+
+    console.log("paso por aqui");
+    const playlist = await Playlist.findOneAndUpdate(
+      { _id: req.params.id },
+      { $push: { song: [songId] } }
+    );
+    return res.status(200).json(playlist);
+  }
+);
+
+playlistRouter.patch(
   "/playlist/:id",
   getPlaylistMiddleware,
   async (req, res) => {
@@ -105,6 +119,7 @@ playlistRouter.patch(
       req.body,
       {
         new: true,
+        
       }
     );
     return res.status(200).json(playlist);

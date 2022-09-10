@@ -10,13 +10,16 @@ songRouter.get("/", async (req, res) => {
   let query = {};
   if (queryParams.search) {
     query = {
-      $or: [
-        { title: { $regex: queryParams.search, $options: "i" } },
-        { soundUrl: { $regex: queryParams.search, $options: "i" } },
-      ],
+      $or: [{ title: { $regex: queryParams.search, $options: "i" } }],
     };
   }
-  const allSongs = await Song.find(query)
+
+  let limit = undefined;
+
+  if (queryParams.limit) {
+    limit = queryParams.limit;
+  }
+  const allSongs = await Song.find(query, null, { limit })
     .populate({
       path: "artist",
       select: "name",
