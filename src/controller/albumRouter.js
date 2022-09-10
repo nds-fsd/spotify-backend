@@ -26,9 +26,10 @@ albumRouter.get("/album", async (req, res) => {
 albumRouter.get("/album/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const album = await Album.findById(id);
-    /* .populate({ path: "songs", select: "title" })
-      .populate({ path: "artist", select: "name" });*/
+    const album = await Album.findById(id)
+      // .populate({ path: "songs", select: "title" })
+      // .populate({ path: "artist", select: "name" })
+      .populate("songs");
     if (!album) {
       return res.status(404).send();
     }

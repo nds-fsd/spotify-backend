@@ -32,7 +32,7 @@ artistRouter.get("/artist", async (req, res) => {
 artistRouter.get("/artist/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const artists = await Artists.findById(id);
+    const artists = await Artists.findById(id).populate("song");
     if (!artists) {
       return res.status(404).send();
     }
