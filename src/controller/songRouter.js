@@ -24,7 +24,8 @@ songRouter.get("/", async (req, res) => {
       path: "artist",
       select: "name",
     })
-    .populate("genre");
+    .populate("genre")
+    .populate("artist");
   res.json(allSongs);
 });
 
@@ -36,12 +37,7 @@ songRouter.get("/search", async (req, res) => {
 songRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const song = await Song.findById(id)
-      .populate({
-        path: "artist",
-        select: "name",
-      })
-      .populate("genre");
+    const song = await Song.findById(id).populate("artist").populate("genre");
     if (!song) {
       return res.status(404).send();
     }
