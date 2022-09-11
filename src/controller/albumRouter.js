@@ -1,17 +1,32 @@
 const express = require("express");
 const Album = require("../mongo/Schema/Album/album");
 const albumRouter = express.Router();
-// const { isAdmin } = require("../middleware/middleware"); //hay que definir a cuales endpoints asegurar con el middleware
+const { isAdmin } = require("../middleware/middleware");
 
 albumRouter.get("/album", async (req, res) => {
-  const album = await Album.find();
+  const { query: queryParams } = req;
+  let query = {};
+  if (queryParams.search) {
+    query = {
+      $or: [{ name: { $regex: queryParams.search, $options: "i" } }],
+    };
+  }
+  let limit = undefined;
+
+  if (queryParams.limit) {
+    limit = queryParams.limit;
+  }
+  const album = await Album.find(query, null, { limit })
+    // .populate({ path: "songs", select: "title" })
+    .populate("artist")
+    .populate("songs");
   res.json(album);
 });
 
 albumRouter.get("/album/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const album = await Album.findById(id);
+    const album = await Album.findById(id).populate("artist").populate("songs");
     if (!album) {
       return res.status(404).send();
     }
@@ -22,7 +37,7 @@ albumRouter.get("/album/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-albumRouter.post("/album", async (req, res) => {
+albumRouter.post("/album", isAdmin, async (req, res) => {
   const { body } = req;
 
   const data = {
@@ -38,7 +53,7 @@ albumRouter.post("/album", async (req, res) => {
   res.json(newAlbum);
 });
 
-albumRouter.patch("/album/:id", async (req, res) => {
+albumRouter.patch("/album/:id", isAdmin, async (req, res) => {
   const { id } = req.params;
   const { body } = req;
   if (id !== undefined) {
@@ -53,7 +68,7 @@ albumRouter.patch("/album/:id", async (req, res) => {
   return res.status(404).send();
 });
 
-albumRouter.delete("/album/:id", async (req, res) => {
+albumRouter.delete("/album/:id", isAdmin, async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
     const album = await Album.findByIdAndDelete(id);
