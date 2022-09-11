@@ -14,10 +14,17 @@ artistRouter.get("/artist", async (req, res) => {
       ],
     };
   }
-  const allArtists = await Artists.find(query).populate({
-    path: "albums",
-    select: "name",
-  });
+  let limit = undefined;
+
+  if (queryParams.limit) {
+    limit = queryParams.limit;
+  }
+  const allArtists = await Artists.find(query, null, { limit })
+    .populate({
+      path: "albums",
+      select: "name",
+    })
+    .populate("song");
 
   res.json(allArtists);
 });
@@ -25,7 +32,7 @@ artistRouter.get("/artist", async (req, res) => {
 artistRouter.get("/artist/:id", async (req, res) => {
   const { id } = req.params;
   if (id !== undefined) {
-    const artists = await Artists.findById(id);
+    const artists = await Artists.findById(id).populate("song");
     if (!artists) {
       return res.status(404).send();
     }
@@ -43,6 +50,7 @@ artistRouter.post("/artist", isAdmin, async (req, res) => {
     bio: body.bio,
     monthlyUsers: body.monthlyUsers,
     albums: body.albums,
+    song: body.song,
   };
 
   const newArtist = new Artists(data);
