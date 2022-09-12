@@ -119,7 +119,6 @@ playlistRouter.patch(
       req.body,
       {
         new: true,
-        
       }
     );
     return res.status(200).json(playlist);
@@ -128,7 +127,7 @@ playlistRouter.patch(
 
 playlistRouter.delete(
   "/playlist/:id",
-  getPlaylistMiddleware,
+  // getPlaylistMiddleware,
   async (req, res) => {
     const playlist = await Playlist.findByIdAndRemove(req.params.id, {
       returnOriginal: true,
